@@ -72,6 +72,7 @@
     "tape": "babel-tape-runner \"src/**/__tests__/*.js\"",
     "pretest": "npm run lint",
     "test": "npm run tape",
+    "test-rule": "babel-tape-runner \"src/rules/$RULE/__tests__/*.js\"",
     "build": "babel src --out-dir dist",
     "prepublish": "npm run build",
     "release": "npmpub"
