@@ -1,0 +1,226 @@
+"use strict";
+
+var _testRule = require("../../../testUtils/testRule");
+
+var _testRule2 = _interopRequireDefault(_testRule);
+
+var _ = require("..");
+
+var _2 = _interopRequireDefault(_);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+(0, _testRule2.default)(_2.default, {
+  ruleName: _.ruleName,
+  config: [undefined],
+  skipBasicChecks: true,
+
+  accept: [{
+    code: "",
+    description: "empty string"
+  }, {
+    code: "\n",
+    description: "no nodes"
+  }, {
+    code: "a {}",
+    description: "no newline"
+  }, {
+    code: "a::before { content: \"  \n\t\n\"; }",
+    description: "breaking the rule within a string"
+  }, {
+    code: "a,\nb {}",
+    description: "selector delimiter"
+  }, {
+    code: "a\n{}",
+    description: "before opening brace"
+  }, {
+    code: "a {\n  color: pink; }",
+    description: "after opening brace with space after newline"
+  }, {
+    code: "a { color: pink;\n}",
+    description: "before closing brace"
+  }, {
+    code: "a { color: pink; }\nb { color: orange; }",
+    description: "after closing brace"
+  }, {
+    code: "a { color: pink; }\n\n\nb { color: orange; }",
+    description: "multiple newlines after closing brace"
+  }, {
+    code: "a { color: pink;\n  top: 0; }",
+    description: "between declarations with two spaces after newline"
+  }, {
+    code: "a { color:\n\tpink; }",
+    description: "between properties and values with tab after newline"
+  }, {
+    code: "a { background-position: top left,\ntop right; }",
+    description: "within values"
+  }, {
+    code: "@media print,\nscreen {}",
+    description: "within media query list"
+  }, {
+    code: "@media print {\n  a { color: pink; } }",
+    description: "after opening brace of media query with space after newline"
+  }, {
+    code: "a\r{}",
+    description: "carriage return opening brace"
+  }, {
+    code: "a\n{\n\tcolor: pink;\n\ttop: 0;\n}"
+  }, {
+    code: "@media print {\n  a {\n  color: pink;\n  }\n}\n\n@media screen {\n  b { color: orange; }\n}"
+  }],
+
+  reject: [{
+    code: " \n",
+    description: "no nodes with space before newline",
+    message: _.messages.rejected,
+    line: 1,
+    column: 1
+  }, {
+    code: "/* foo  \nbar */ a { color: pink; }",
+    description: "eol-whitespace within a comment",
+    message: _.messages.rejected,
+    line: 1,
+    column: 8
+  }, {
+    code: "a, \nb {}",
+    description: "selector delimiter with space before newline",
+    message: _.messages.rejected,
+    line: 1,
+    column: 3
+  }, {
+    code: "a\t\n{}",
+    description: "before opening brace with tab before newline",
+    message: _.messages.rejected,
+    line: 1,
+    column: 2
+  }, {
+    code: "a { \n  color: pink; }",
+    description: "after opening brace with space before and after newline",
+    message: _.messages.rejected,
+    line: 1,
+    column: 4
+  }, {
+    code: "a { color: pink; \n}",
+    description: "before closing brace with space before newline",
+    message: _.messages.rejected,
+    line: 1,
+    column: 17
+  }, {
+    code: "a { color: pink; }\t\nb { color: orange; }",
+    description: "after closing brace with tab before newline",
+    message: _.messages.rejected,
+    line: 1,
+    column: 19
+  }, {
+    code: "a { color: pink; } \n\n\nb { color: orange; }",
+    message: _.messages.rejected,
+    line: 1,
+    column: 19
+  }, {
+    code: "a { color: pink; }\n \n\nb { color: orange; }",
+    message: _.messages.rejected,
+    line: 2,
+    column: 1
+  }, {
+    code: "a { color: pink; }\n\n \nb { color: orange; }",
+    message: _.messages.rejected,
+    line: 3,
+    column: 1
+  }, {
+    code: "a { color: pink; \n  top: 0; }",
+    description: "between declarations with space before and two after newline",
+    message: _.messages.rejected,
+    line: 1,
+    column: 17
+  }, {
+    code: "a { color:\t\n\tpink; }",
+    description: "between properties and values with tab before and after newline",
+    message: _.messages.rejected,
+    line: 1,
+    column: 11
+  }, {
+    code: "a { background-position: top left, \ntop right; }",
+    description: "within values with space before newline",
+    message: _.messages.rejected,
+    line: 1,
+    column: 35
+  }, {
+    code: "@media print, \nscreen {}",
+    description: "within media query list with space before newline",
+    message: _.messages.rejected,
+    line: 1,
+    column: 14
+  }, {
+    code: "@media print { \n  a { color: pink; } }",
+    description: "after opening brace of media query with space before and after newline",
+    message: _.messages.rejected,
+    line: 1,
+    column: 15
+  }, {
+    code: "a\t\r{}",
+    description: "tab before carriage return before opening brace",
+    message: _.messages.rejected,
+    line: 1,
+    column: 2
+  }, {
+    code: "a \n{\n\tcolor: pink;\n\ttop: 0;\n}",
+    message: _.messages.rejected,
+    line: 1,
+    column: 2
+  }, {
+    code: "a\n{\t\n\tcolor: pink;\n\ttop: 0;\n}",
+    message: _.messages.rejected,
+    line: 2,
+    column: 2
+  }, {
+    code: "a\n{\n\tcolor: pink; \n\ttop: 0;\n}",
+    message: _.messages.rejected,
+    line: 3,
+    column: 14
+  }, {
+    code: "a\n{\n\tcolor: pink;\n\ttop: 0;  \n}",
+    message: _.messages.rejected,
+    line: 4,
+    column: 10
+  }, {
+    code: "@media print { \n  a {\n  color: pink;\n  }\n}\n\n@media screen {\n  b { color: orange; }\n}",
+    message: _.messages.rejected,
+    line: 1,
+    column: 15
+  }, {
+    code: "@media print {\n  a { \n  color: pink;\n  }\n}\n\n@media screen {\n  b { color: orange; }\n}",
+    message: _.messages.rejected,
+    line: 2,
+    column: 6
+  }, {
+    code: "@media print {\n  a {\n  color: pink; \n  }\n}\n\n@media screen {\n  b { color: orange; }\n}",
+    message: _.messages.rejected,
+    line: 3,
+    column: 15
+  }, {
+    code: "@media print {\n  a {\n  color: pink;\n  } \n}\n\n@media screen {\n  b { color: orange; }\n}",
+    message: _.messages.rejected,
+    line: 4,
+    column: 4
+  }, {
+    code: "@media print {\n  a {\n  color: pink;\n  }\n} \n\n@media screen {\n  b { color: orange; }\n}",
+    message: _.messages.rejected,
+    line: 5,
+    column: 2
+  }, {
+    code: "@media print {\n  a {\n  color: pink;\n  }\n}\n \n@media screen {\n  b { color: orange; }\n}",
+    message: _.messages.rejected,
+    line: 6,
+    column: 1
+  }, {
+    code: "@media print {\n  a {\n  color: pink;\n  }\n}\n\n@media screen { \n  b { color: orange; }\n}",
+    message: _.messages.rejected,
+    line: 7,
+    column: 16
+  }, {
+    code: "@media print {\n  a {\n  color: pink;\n  }\n}\n\n@media screen {\n  b { color: orange; } \n}",
+    message: _.messages.rejected,
+    line: 8,
+    column: 23
+  }]
+});
